@@ -1,0 +1,57 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: www
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+
+    image: wms-hd
+    container_name: wms-hd-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/php/conf.d/99-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
+      - ./docker-compose/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    environment:
+      - XDEBUG_MODE = debug
+    extra_hosts:
+     - host.docker.internal:host-gateway
+    networks:
+      - wms-hd
+  db:
+    image: mysql:8.0
+    container_name: wms-hd-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - wms-hd
+
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: wms-hd-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+      
+
+
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - wms-hd
+networks:
+  wms-hd:
+    driver: bridge

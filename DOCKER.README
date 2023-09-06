@@ -1,0 +1,5 @@
+
+en el servidor del app
+
+php artisan key:generate 
+php artisan db:seed --class=Database\\Seeders\\V_2_0_0\\DatabaseSeeder
