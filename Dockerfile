@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     libkrb5-dev \
     libssl-dev \  
     zip \
-    unzip 
+    unzip \
+    cron
     
 
 # Clear cache
@@ -45,6 +46,12 @@ COPY ./docker-compose/php/conf.d/99-xdebug.ini /usr/local/etc/php/conf.d/docker-
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
+
+COPY ./docker-compose/crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
+
+#RUN /usr/bin/crontab /etc/cron.d/crontab
+RUN echo "* * * * * root php /var/www/artisan schedule:run >> /tmp/cron.log 2>&1" >> /etc/crontab
 
 # Set working directory
 WORKDIR /var/www
