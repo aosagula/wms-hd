@@ -12,9 +12,6 @@ use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-
-use App\Mail\TestMail;
 
 /*
   |--------------------------------------------------------------------------
@@ -533,7 +530,6 @@ Route::middleware('web')->group(function () {
     //testing ckeditor
     //===================================================================================
     Route::middleware('auth')->group(function () {
-       
         Route::get('client-profile', [Client\helpdesk\GuestController::class, 'getProfile'])->name('client.profile'); /*  User profile get  */
 
         Route::get('mytickets', [Client\helpdesk\GuestController::class, 'getMyticket'])->name('ticket2');
@@ -807,19 +803,4 @@ Route::middleware('web')->group(function () {
     Route::get('show/swtich-language/{id}', [Client\helpdesk\UnAuthController::class, 'changeUserLanguage']);
     Route::get('pages/swtich-language/{id}', [Client\helpdesk\UnAuthController::class, 'changeUserLanguage'])->name('switch-user-lang');
     Route::get('swtich-language/{id}', [Client\helpdesk\UnAuthController::class, 'changeUserLanguage'])->name('switch-user-lang');
-
-    Route::get('/xdebug', function () {
-        xdebug_info();
-    });
-
-    Route::get('/mail', function () {
-        $testMailData = [
-            'title' => 'Test Email From AllPHPTricks.com',
-            'body' => 'This is the body of test email.'
-        ];
-
-        Mail::to('asagulal@vaclog.com')->send(new TestMail($testMailData));
-
-        dd('Success! Email has been sent successfully.');
-    });
 });

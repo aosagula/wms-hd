@@ -42,7 +42,7 @@
         }
     ],
     "require": {
-        "php": "^8.0|^8.2",
+        "php": "^8.0",
         "laravel/framework": "^9.46",
         "laravelcollective/html": "^6.3",
         "vsmoraes/laravel-pdf": "dev-dev-laravel6",
